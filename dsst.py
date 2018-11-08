@@ -31,12 +31,14 @@ def press(name):
     if name == "Exit":
         win.stop()
     elif name == "Stop":
-        win.stop()
+        win.enableButton("Start")
     elif name == "Start":
+        win.disableButton("Start")
+        win.enableButton("Stop")
         new_task_table()
         change_pic()
     elif name == "About":
-        win.infoBox("About", "DSST - Digit Symbol Substitution Test\n\nMade by: Martin Barton\nEmail: ma.barton@seznam.cz\nYear: 2018\nUniversity: CTU FBMI\nPlace: Kladno, Czech Republic\nGit: XXXXXXXXXX.com")
+        win.infoBox("About", "DSST - Digit Symbol Substitution Test\n\nMade by: Martin Barton\nEmail: ma.barton@seznam.cz\nYear: 2018\nUniversity: CTU FBMI\nPlace: Kladno, Czech Republic\nGit: https://github.com/mabartcz/DSST")
 
 
 def answer_press(key):
