@@ -1,9 +1,13 @@
 from appJar import gui
 import random
 
+
+
+
+
 win = gui("DSST")
 win.showSplash("DSST - Loading","Gray", "Lightblue", "Black")
-win.setBg("gray")
+win.setBg("Gray")
 win.setFont(20)
 #win.setSize("800x500")
 win.setResizable(False)
@@ -14,6 +18,9 @@ result_list = []
 correct = None
 
 shuffled = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+
+def launch(app):
+    win.showSubWindow(app)
 
 def change_pic():
     # Change game pic
@@ -51,6 +58,9 @@ def press(name):
         change_pic()
     elif name == "About":
         win.infoBox("About", "DSST - Digit Symbol Substitution Test\n\nMade by: Martin Barton\nEmail: ma.barton@seznam.cz\nYear: 2018\nUniversity: CTU FBMI\nPlace: Kladno, Czech Republic\nGit: https://github.com/mabartcz/DSST")
+    elif name == "Control":
+        pass
+
 
 
 def answer_press(key):
@@ -70,8 +80,11 @@ def answer_press(key):
     change_pic()
     new_task_table()
 
+
+
+
 # Add menu
-fileMenus = [ "About", "-", "Exit"]
+fileMenus = ["Control", "About", "-", "Exit"]
 win.addMenuList("File", fileMenus, press)
 
 # Add headline
@@ -105,14 +118,26 @@ win.addLabel("Space4", "", 8, 0, 9)
 # Add buttons
 win.button("Start", press, 9, 0, 3)
 win.button("Stop", press,9, 6, 3)
+win.button("Control", launch,9, 3, 3)
 
+
+# Set Control window
+win.startSubWindow("Control")
+win.setBg("Gray")
+win.setFont(20)
+win.addLabel("l1", "DSST - Control window", 0, 0, 3)
+win.setLabelBg("l1", "lightblue")
+win.setLabelFg("l1", "black")
+win.addLabel("Space11", "")
+win.addLabel("Space22", "", 3, 2)
 # Add status picture
-win.addImage("Status", "pic/znak_blank_gray.gif", 9, 3, 3)
+win.addLabel("l2", "Current: ", 3, 0)
+win.addImage("Status", "pic/znak_blank_gray.gif", 3, 1)
+win.stopSubWindow()
 
 # Bind key actions
 for k in range(1, 10):
     win.bindKey(k, answer_press)
-
 
 win.go()
 
