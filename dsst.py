@@ -1,10 +1,6 @@
 from appJar import gui
 import random
 
-
-
-
-
 win = gui("DSST")
 win.showSplash("DSST - Loading","Gray", "Lightblue", "Black")
 win.setBg("Gray")
@@ -59,9 +55,7 @@ def press(name):
     elif name == "About":
         win.infoBox("About", "DSST - Digit Symbol Substitution Test\n\nMade by: Martin Barton\nEmail: ma.barton@seznam.cz\nYear: 2018\nUniversity: CTU FBMI\nPlace: Kladno, Czech Republic\nGit: https://github.com/mabartcz/DSST")
     elif name == "Control":
-        pass
-
-
+        launch(name)
 
 def answer_press(key):
     # Game key press (1 - 9)
@@ -76,11 +70,8 @@ def answer_press(key):
     else:
         win.setImage("Status", "pic/No.gif")
 
-
     change_pic()
     new_task_table()
-
-
 
 
 # Add menu
@@ -118,7 +109,6 @@ win.addLabel("Space4", "", 8, 0, 9)
 # Add buttons
 win.button("Start", press, 9, 0, 3)
 win.button("Stop", press,9, 6, 3)
-win.button("Control", launch,9, 3, 3)
 
 
 # Set Control window
@@ -130,7 +120,6 @@ win.setLabelBg("l1", "lightblue")
 win.setLabelFg("l1", "black")
 win.addLabel("Space11", "")
 win.addLabel("Space22", "", 3, 2)
-# Add status picture
 win.addLabel("l2", "Current: ", 3, 0)
 win.addImage("Status", "pic/znak_blank_gray.gif", 3, 1)
 win.stopSubWindow()
