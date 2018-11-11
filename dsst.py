@@ -3,6 +3,10 @@ import random
 
 win = gui("DSST")
 win.showSplash("DSST - Loading","Gray", "Lightblue", "Black")
+win.setBg("gray")
+win.setFont(20)
+#win.setSize("800x500")
+win.setResizable(False)
 
 pressed_list = []
 correct_list = []
@@ -12,6 +16,7 @@ correct = None
 shuffled = [1, 2, 3, 4, 5, 6, 7, 8, 9]
 
 def change_pic():
+    # Change game pic
     global correct
     im_path = "pic/znak_"
     im_num = str(random.randint(1, 9))
@@ -19,6 +24,7 @@ def change_pic():
     correct = int(im_num)
 
 def new_task_table():
+    # Add new task table signs
     global shuffled
     random.shuffle(shuffled)
     for i in range(0, 9):
@@ -28,10 +34,16 @@ def new_task_table():
         win.setImage(im_name, im_path + im_num + ".gif")
 
 def press(name):
+    # Buttons
     if name == "Exit":
         win.stop()
     elif name == "Stop":
         win.enableButton("Start")
+        win.setImage("Znak", "pic/znak_blank.gif")
+        win.setImage("Status", "pic/znak_blank_gray.gif")
+        for i in range(0, 9):
+            im_name = "Znak" + str(i)
+            win.setImage(im_name, "pic/znak_blank.gif")
     elif name == "Start":
         win.disableButton("Start")
         win.enableButton("Stop")
@@ -42,6 +54,7 @@ def press(name):
 
 
 def answer_press(key):
+    # Game key press (1 - 9)
     global pressed_list
     global correct_list
     pressed = shuffled[key-1]
@@ -56,12 +69,6 @@ def answer_press(key):
 
     change_pic()
     new_task_table()
-
-
-win.setBg("gray")
-win.setFont(20)
-#win.setSize("800x500")
-win.setResizable(False)
 
 # Add menu
 fileMenus = [ "About", "-", "Exit"]
@@ -92,13 +99,15 @@ win.addLabel("Space3", "", 6, 0, 9)
 # Add game picture
 win.addImage("Znak", "pic/znak_blank.gif", 7, 0, 9)
 
-#Add space
+# Add space
 win.addLabel("Space4", "", 8, 0, 9)
 
-#Add buttons
+# Add buttons
 win.button("Start", press, 9, 0, 3)
 win.button("Stop", press,9, 6, 3)
-win.addImage("Status", "pic/Znak_blank.gif", 9, 3, 3)
+
+# Add status picture
+win.addImage("Status", "pic/znak_blank_gray.gif", 9, 3, 3)
 
 # Bind key actions
 for k in range(1, 10):
