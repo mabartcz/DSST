@@ -12,6 +12,9 @@ pressed_list = []
 correct_list = []
 result_list = []
 correct = None
+YN = None
+current_status = "0/0"
+start_status = 0
 
 shuffled = [1, 2, 3, 4, 5, 6, 7, 8, 9]
 
@@ -37,6 +40,7 @@ def new_task_table():
         win.setImage(im_name, im_path + im_num + ".gif")
 
 def press(name):
+    global start_status
     # Buttons
     if name == "Exit":
         win.stop()
@@ -47,7 +51,9 @@ def press(name):
         for i in range(0, 9):
             im_name = "Znak" + str(i)
             win.setImage(im_name, "pic/znak_blank.gif")
+        start_status = 0
     elif name == "Start":
+        start_status = 1
         win.disableButton("Start")
         win.enableButton("Stop")
         new_task_table()
@@ -58,20 +64,29 @@ def press(name):
         launch(name)
 
 def answer_press(key):
-    # Game key press (1 - 9)
-    global pressed_list
-    global correct_list
-    pressed = shuffled[key-1]
-    pressed_list.append(str(pressed))
-    correct_list.append(str(correct))
+    if start_status == 1:
+        # Game key press (1 - 9)
+        global pressed_list
+        global correct_list
+        pressed = shuffled[key-1]
+        pressed_list.append(str(pressed))
+        correct_list.append(str(correct))
 
-    if pressed == correct:
-        win.setImage("Status", "pic/Yes.gif")
-    else:
-        win.setImage("Status", "pic/No.gif")
+        if pressed == correct:
+            win.setImage("Status", "pic/Yes.gif")
+            result_list.append(1)
+            YN = 1
+        else:
+            win.setImage("Status", "pic/No.gif")
+            result_list.append(0)
+            YN = 0
 
-    change_pic()
-    new_task_table()
+        # show statistic
+        current_status = str(sum(result_list)) + "/" + str(len(result_list))
+        win.setLabel("CS", current_status )
+
+        change_pic()
+        new_task_table()
 
 
 # Add menu
@@ -122,6 +137,9 @@ win.addLabel("Space11", "")
 win.addLabel("Space22", "", 3, 2)
 win.addLabel("l2", "Current: ", 3, 0)
 win.addImage("Status", "pic/znak_blank_gray.gif", 3, 1)
+win.addLabel("Space33", "", 4, 0)
+win.addLabel("CS1", "Correct/All:    " , 5, 0)
+win.addLabel("CS", current_status, 5, 1)
 win.stopSubWindow()
 
 # Bind key actions
@@ -132,16 +150,6 @@ win.go()
 
 
 # Statistic
-if len(pressed_list) != len(correct_list):
-    print(len(pressed_list))
-    print(len(correct_list))
-
-for x in range(len(pressed_list)):
-    if pressed_list[x] == correct_list[x]:
-        result_list.append(1)
-    else:
-        result_list.append(0)
-
 
 print("pressed")
 print(pressed_list)
