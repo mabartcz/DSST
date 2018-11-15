@@ -56,7 +56,6 @@ def press(name):
         correct_list = []
         result_list = []
         win.setLabel("CS", "0/0")
-
     elif name == "Start":
         start_status = 1
         win.disableButton("Start")
@@ -67,10 +66,15 @@ def press(name):
         win.infoBox("About", "DSST - Digit Symbol Substitution Test\n\nMade by: Martin Barton\nEmail: ma.barton@seznam.cz\nYear: 2018\nUniversity: CTU FBMI\nPlace: Kladno, Czech Republic\nGit: https://github.com/mabartcz/DSST")
     elif name == "Control":
         launch(name)
+    elif name == "Save":
+        pass
+    elif name == "Show":
+        pass
+
 
 def answer_press(key):
-    if start_status == 1:
-        # Game key press (1 - 9)
+    if start_status == 1: # If start was pressed
+        # Game key press (1 - 9) than ->
         global pressed_list
         global correct_list
         pressed = shuffled[key-1]
@@ -110,23 +114,15 @@ for i in range(9):
     im_name = "Znak"+str(i)
     im_path = "pic/znak_blank"
     win.addImage(im_name, im_path+".gif", 3, i)
-
 # Add image lables
 for j in range(1,10):
     lb_name = "Z"+str(j)
     win.addLabel(lb_name, str(j), 4, j-1)
 
-# Add space
 win.addLabel("Space2", "", 5, 0, 9)
 win.addLabel("Space3", "", 6, 0, 9)
-
-# Add game picture
 win.addImage("Znak", "pic/znak_blank.gif", 7, 0, 9)
-
-# Add space
 win.addLabel("Space4", "", 8, 0, 9)
-
-# Add buttons
 win.button("Start", press, 9, 0, 3)
 win.button("Restart", press,9, 6, 3)
 
@@ -149,6 +145,9 @@ win.addImage("Status", "pic/znak_blank_gray.gif", 3, 1)
 win.addLabel("Space33", "", 4, 0)
 win.addLabel("CS1", "Correct/All:    " , 5, 0)
 win.addLabel("CS", current_status, 5, 1)
+win.addLabel("Space44", "", 6, 0)
+win.button("Show", press, 7, 0 )
+win.button("Save", press, 7, 1)
 win.stopSubWindow()
 
 
