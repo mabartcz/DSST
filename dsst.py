@@ -1,5 +1,6 @@
 from appJar import gui
 import random
+import time
 
 win = gui("DSST")
 win.showSplash("DSST - Loading","Gray", "Lightblue", "Black")
@@ -15,6 +16,8 @@ correct = None
 YN = None
 current_status = "0/0"
 start_status = 0
+time_list = []
+times = []
 
 shuffled = [1, 2, 3, 4, 5, 6, 7, 8, 9]
 
@@ -40,7 +43,7 @@ def new_task_table():
         win.setImage(im_name, im_path + im_num + ".gif")
 
 def press(name):
-    global start_status, pressed_list, correct_list, result_list
+    global start_status, pressed_list, correct_list, result_list, time_list, times
     # Buttons
     if name == "Exit":
         win.stop()
@@ -55,13 +58,20 @@ def press(name):
         pressed_list = []
         correct_list = []
         result_list = []
+        time_list = []
+        times = []
         win.setLabel("CS", "0/0")
+        win.setLabel("Times", "0")
+        win.setLabel("Stat", "")
     elif name == "Start":
         start_status = 1
         win.disableButton("Start")
+        #win.disableButton("Show")
+        #win.disableButton("Save")
         win.enableButton("Restart")
         new_task_table()
         change_pic()
+        time_list.append(time.time())
     elif name == "About":
         win.infoBox("About", "DSST - Digit Symbol Substitution Test\n\nMade by: Martin Barton\nEmail: ma.barton@seznam.cz\nYear: 2018\nUniversity: CTU FBMI\nPlace: Kladno, Czech Republic\nGit: https://github.com/mabartcz/DSST")
     elif name == "Control":
@@ -75,8 +85,7 @@ def press(name):
 def answer_press(key):
     if start_status == 1: # If start was pressed
         # Game key press (1 - 9) than ->
-        global pressed_list
-        global correct_list
+        global pressed_list, time_list, correct_list
         pressed = shuffled[key-1]
         pressed_list.append(str(pressed))
         correct_list.append(str(correct))
@@ -90,9 +99,14 @@ def answer_press(key):
             result_list.append(0)
             YN = 0
 
+        time_list.append(time.time())
+        times.append((round((time_list[-1]-time_list[-2]), 3)))
+
+
         # show statistic
         current_status = str(sum(result_list)) + "/" + str(len(result_list))
         win.setLabel("CS", current_status )
+        win.setLabel("Times", times[-1] )
 
         change_pic()
         new_task_table()
@@ -106,7 +120,7 @@ win.addMenuList("File", fileMenus, press)
 win.addLabel("lb1", "Digit Symbol Substitution Test", 0, 0, 9)
 win.setLabelBg("lb1", "lightblue")
 win.setLabelFg("lb1", "black")
-win.addLabel("Space1", "", 1, 0, 9)
+win.addLabel("Stat", "", 1, 0, 9)
 win.addLabel("Space5", "", 2, 0, 9)
 
 # Add image widgets
@@ -145,9 +159,12 @@ win.addImage("Status", "pic/znak_blank_gray.gif", 3, 1)
 win.addLabel("Space33", "", 4, 0)
 win.addLabel("CS1", "Correct/All:    " , 5, 0)
 win.addLabel("CS", current_status, 5, 1)
-win.addLabel("Space44", "", 6, 0)
-win.button("Show", press, 7, 0 )
-win.button("Save", press, 7, 1)
+win.addLabel("Space55", "", 6, 0)
+win.addLabel("Time", "Time: ", 7, 0)
+win.addLabel("Times", "0", 7, 1)
+win.addLabel("Space44", "", 8, 0)
+win.button("Show", press, 9, 0 )
+win.button("Save", press, 9, 1)
 win.stopSubWindow()
 
 
@@ -162,3 +179,5 @@ print("correct")
 print(correct_list)
 print("result")
 print(result_list)
+print("time")
+print(times)
