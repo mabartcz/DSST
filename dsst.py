@@ -40,11 +40,11 @@ def new_task_table():
         win.setImage(im_name, im_path + im_num + ".gif")
 
 def press(name):
-    global start_status
+    global start_status, pressed_list, correct_list, result_list
     # Buttons
     if name == "Exit":
         win.stop()
-    elif name == "Stop":
+    elif name == "Restart":
         win.enableButton("Start")
         win.setImage("Znak", "pic/znak_blank.gif")
         win.setImage("Status", "pic/znak_blank_gray.gif")
@@ -52,10 +52,15 @@ def press(name):
             im_name = "Znak" + str(i)
             win.setImage(im_name, "pic/znak_blank.gif")
         start_status = 0
+        pressed_list = []
+        correct_list = []
+        result_list = []
+        win.setLabel("CS", "0/0")
+
     elif name == "Start":
         start_status = 1
         win.disableButton("Start")
-        win.enableButton("Stop")
+        win.enableButton("Restart")
         new_task_table()
         change_pic()
     elif name == "About":
@@ -123,7 +128,11 @@ win.addLabel("Space4", "", 8, 0, 9)
 
 # Add buttons
 win.button("Start", press, 9, 0, 3)
-win.button("Stop", press,9, 6, 3)
+win.button("Restart", press,9, 6, 3)
+
+# Bind key actions
+for k in range(1, 10):
+    win.bindKey(k, answer_press)
 
 
 # Set Control window
@@ -142,9 +151,6 @@ win.addLabel("CS1", "Correct/All:    " , 5, 0)
 win.addLabel("CS", current_status, 5, 1)
 win.stopSubWindow()
 
-# Bind key actions
-for k in range(1, 10):
-    win.bindKey(k, answer_press)
 
 win.go()
 
