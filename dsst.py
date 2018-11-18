@@ -74,12 +74,18 @@ def press(name):
         win.updatePlot("plot", list(range(len(times))), times)
         showLabels()
 
+        win.setLabel("Startinfo", "Press spacebar to START !")
+        win.bindKey("<space>", space_press)
+        win.setMeter("progress",0)
+
     elif name == "Start":
         start_status = 1
         win.disableButton("Start")
+        win.unbindKey("<space>")
+        win.setLabel("Startinfo", " ")
         #win.disableButton("Show")
         #win.disableButton("Save")
-        win.enableButton("Restart")
+        #win.enableButton("Restart")
         new_task_table()
         change_pic()
         time_list.append(time.time())
@@ -89,8 +95,10 @@ def press(name):
         launch(name)
     elif name == "Save":
         pass
-    elif name == "Show":
-        pass
+    elif name == "Graph":
+        # Graph plot update
+        win.updatePlot("plot", list(range(1,len(times)+1)), times)
+        showLabels()
 
 def answer_press(key):
     if start_status == 1: # If start was pressed
@@ -117,13 +125,15 @@ def answer_press(key):
         current_status = str(sum(result_list)) + "/" + str(len(result_list))
         win.setLabel("CS", current_status )
         win.setLabel("Times", times[-1] )
-
-        # Graph plot update
-        win.updatePlot("plot", list(range(1,len(times)+1)), times)
-        showLabels()
+        win.setMeter("progress",(sum(result_list)/len(result_list))*100 )
 
         change_pic()
         new_task_table()
+
+def space_press(key):
+    win.setLabel("Startinfo", " ")
+    press("Start")
+
 
 
 # Add menu
@@ -151,12 +161,14 @@ win.addLabel("Space2", "", 5, 0, 9)
 win.addLabel("Space3", "", 6, 0, 9)
 win.addImage("Znak", "pic/znak_blank.gif", 7, 0, 9)
 win.addLabel("Space4", "", 8, 0, 9)
-win.button("Start", press, 9, 0, 3)
-win.button("Restart", press,9, 6, 3)
+win.addLabel("Startinfo", "Press spacebar to START !", 9, 0, 9)
+#win.button("Start", press, 9, 0, 3)
+#win.button("Restart", press,9, 6, 3)
 
 # Bind key actions
 for k in range(1, 10):
     win.bindKey(k, answer_press)
+win.bindKey("<space>", space_press)
 
 
 # Set Control window
@@ -170,14 +182,16 @@ win.addLabel("Space11", "")
 win.addLabel("Space22", "", 3, 2)
 win.addLabel("l2", "Current: ", 3, 0)
 win.addImage("Status", "pic/znak_blank_gray.gif", 3, 1)
-win.addLabel("Space33", "", 4, 0)
+win.addSplitMeter("progress", 4, 0, 3)
+win.setMeterFill("progress", ["green", "red"])
 win.addLabel("CS1", "Correct/All:    " , 5, 0)
 win.addLabel("CS", current_status, 5, 1)
 win.addLabel("Space55", "", 6, 0)
 win.addLabel("Time", "Time: ", 7, 0)
 win.addLabel("Times", "0", 7, 1)
-win.addLabel("Space44", "", 8, 0)
-win.button("Show", press, 9, 0 )
+win.button("Graph", press, 8, 0)
+win.button("Restart", press, 8, 1)
+win.button("Start", press, 9, 0 )
 win.button("Save", press, 9, 1)
 axes = win.addPlot("plot", 0,0, 0, 4, 10, 10)
 showLabels()
