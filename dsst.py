@@ -21,6 +21,13 @@ times = []
 
 shuffled = [1, 2, 3, 4, 5, 6, 7, 8, 9]
 
+def showLabels():
+    axes.legend(['Time per action'])
+    axes.set_xlabel("Number of actions (n)")
+    axes.set_ylabel("Time per action (sec)")
+    win.refreshPlot("plot")
+
+
 def launch(app):
     win.showSubWindow(app)
 
@@ -63,6 +70,10 @@ def press(name):
         win.setLabel("CS", "0/0")
         win.setLabel("Times", "0")
         win.setLabel("Stat", "")
+
+        win.updatePlot("plot", list(range(len(times))), times)
+        showLabels()
+
     elif name == "Start":
         start_status = 1
         win.disableButton("Start")
@@ -80,7 +91,6 @@ def press(name):
         pass
     elif name == "Show":
         pass
-
 
 def answer_press(key):
     if start_status == 1: # If start was pressed
@@ -107,6 +117,10 @@ def answer_press(key):
         current_status = str(sum(result_list)) + "/" + str(len(result_list))
         win.setLabel("CS", current_status )
         win.setLabel("Times", times[-1] )
+
+        # Graph plot update
+        win.updatePlot("plot", list(range(1,len(times)+1)), times)
+        showLabels()
 
         change_pic()
         new_task_table()
@@ -165,6 +179,8 @@ win.addLabel("Times", "0", 7, 1)
 win.addLabel("Space44", "", 8, 0)
 win.button("Show", press, 9, 0 )
 win.button("Save", press, 9, 1)
+axes = win.addPlot("plot", 0,0, 0, 4, 10, 10)
+showLabels()
 win.stopSubWindow()
 
 
