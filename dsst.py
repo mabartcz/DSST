@@ -1,6 +1,7 @@
 from appJar import gui
 import random
 import time
+import datetime
 
 win = gui("DSST")
 win.showSplash("DSST - Loading","Gray", "Lightblue", "Black")
@@ -94,7 +95,13 @@ def press(name):
     elif name == "Control":
         launch(name)
     elif name == "Save":
-        pass
+        f_name = "dsst_"+ str(datetime.datetime.now().strftime("%H-%M-%d-%m-%y")+".csv")
+        file = open(f_name, "w")
+        file.write("Time of test," + str(datetime.datetime.now().strftime("%H:%M %d %m %Y")))
+        file.write("\nTime (sec), Correct (T/F-1/0)")
+        for k in range(len(times)):
+            file.write("\n"+str(times[k])+","+str(result_list[k]))
+        file.close()
     elif name == "Graph":
         # Graph plot update
         win.updatePlot("plot", list(range(1,len(times)+1)), times)
@@ -199,15 +206,3 @@ win.stopSubWindow()
 
 
 win.go()
-
-
-# Statistic
-
-print("pressed")
-print(pressed_list)
-print("correct")
-print(correct_list)
-print("result")
-print(result_list)
-print("time")
-print(times)
