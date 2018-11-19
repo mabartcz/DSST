@@ -95,13 +95,14 @@ def press(name):
     elif name == "Control":
         launch(name)
     elif name == "Save":
-        f_name = "dsst_"+ str(datetime.datetime.now().strftime("%H-%M-%d-%m-%y")+".csv")
+        f_name = "dsst-"+ str(datetime.datetime.now().strftime("%H%M%S-%d-%m-%y")+".csv")
         file = open(f_name, "w")
         file.write("Time of test," + str(datetime.datetime.now().strftime("%H:%M %d %m %Y")))
         file.write("\nTime (sec), Correct (T/F-1/0)")
         for k in range(len(times)):
             file.write("\n"+str(times[k])+","+str(result_list[k]))
         file.close()
+        win.infoBox("SaveInfo", "File was successfully saved as: " +str(f_name) + "\nto the dsst folder.")
     elif name == "Graph":
         # Graph plot update
         win.updatePlot("plot", list(range(1,len(times)+1)), times)
