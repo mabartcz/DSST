@@ -72,7 +72,7 @@ def press(name):
         win.setLabel("Stat", "")
         win.setMeter("progress",0)
         win.updatePlot("plot", list(range(len(times))), times)
-        win.setImage("Status", "pic/znak_blank.gif")
+        win.setImage("Status", "pic/znak_blank_gray.gif")
         showLabels()
         win.setLabel("Meann", "0")
 
@@ -91,8 +91,8 @@ def press(name):
     elif name == "Control":
         launch(name)
     elif name == "Save":
-        f_name = "dsst-"+ str(datetime.datetime.now().strftime("%H%M%S-%d-%m-%y")+".csv")
-        file = open(f_name, "w")
+        f_name = "dsst-"+ str(datetime.datetime.now().strftime("%H%M%S-%d-%m-%y"))
+        file = win.saveBox(title="Save", fileName=f_name, fileExt=".csv", asFile=True, parent="Control")
         file.write("Time of test," + str(datetime.datetime.now().strftime("%H:%M %d %m %Y")))
         file.write("\nTime (sec), Correct (T/F-1/0)")
         for k in range(len(times)):
