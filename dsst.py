@@ -27,12 +27,6 @@ times = []
 start_time = None
 shuffled = [1, 2, 3, 4, 5, 6, 7, 8, 9]
 
-def showLabels():
-    axes.legend(['Time per action'])
-    axes.set_xlabel("Number of actions (n)")
-    axes.set_ylabel("Time per action (sec)")
-    win.refreshPlot("plot")
-
 
 def launch(app):
     win.showSubWindow(app)
@@ -55,6 +49,35 @@ def new_task_table():
         im_num = str(shuffled[i])
         win.setImage(im_name, im_path + im_num + ".gif")
 
+def stop():
+    win.enableButton("Start")
+    win.setImage("Znak", "pic/znak_blank.gif")
+    for i in range(0, 9):
+        im_name = "Znak" + str(i)
+        win.setImage(im_name, "pic/znak_blank.gif")
+    start_status = 0
+    win.setLabel("Meann", str(round((statistics.mean(times)), 3)))
+
+    win.setLabel("Startinfo", "Press spacebar to START !")
+    win.bindKey("<space>", space_press)
+
+    # log all merurements through sesion
+    file = open("log.txt", "a")
+    file.write("\nTime of test," + str(datetime.datetime.now().strftime("%H:%M %d %m %Y")))
+    file.write("\nTime (sec), Correct (T/F-1/0)")
+    for k in range(len(times)):
+        file.write("\n" + str(times[k]) + "," + str(result_list[k]))
+    file.close()
+
+    # autosave data
+    f_name = "./results/dsst-" + str(datetime.datetime.now().strftime("%d-%m-%y-%H%M%S") + ".cvs")
+    file = open(f_name, "w")
+    file.write("\nTime of test," + str(datetime.datetime.now().strftime("%H:%M %d %m %Y")))
+    file.write("\nTime (sec), Correct (T/F-1/0)")
+    for k in range(len(times)):
+        file.write("\n" + str(times[k]) + "," + str(result_list[k]))
+    file.close()
+
 def press(name):
     global start_status, pressed_list, correct_list, result_list, time_list, times, start_time
     # Buttons
@@ -71,9 +94,7 @@ def press(name):
         win.setLabel("Times", "0")
         win.setLabel("Stat", "")
         win.setMeter("progress",0)
-        win.updatePlot("plot", list(range(len(times))), times)
         win.setImage("Status", "pic/znak_blank_gray.gif")
-        showLabels()
         win.setLabel("Meann", "0")
 
         start_status = 1
@@ -90,15 +111,8 @@ def press(name):
         win.infoBox("About", "DSST - Digit Symbol Substitution Test\n\nMade by: Martin Barton\nEmail: ma.barton@seznam.cz\nYear: 2018\nUniversity: CTU FBMI\nPlace: Kladno, Czech Republic\nGit: https://github.com/mabartcz/DSST")
     elif name == "Control":
         launch(name)
-    elif name == "Save":
-        f_name = "dsst-"+ str(datetime.datetime.now().strftime("%H%M%S-%d-%m-%y"))
-        file = win.saveBox(title="Save", fileName=f_name, fileExt=".csv", asFile=True, parent="Control")
-        file.write("Time of test," + str(datetime.datetime.now().strftime("%H:%M %d %m %Y")))
-        file.write("\nTime (sec), Correct (T/F-1/0)")
-        for k in range(len(times)):
-            file.write("\n"+str(times[k])+","+str(result_list[k]))
-        file.close()
-        win.infoBox("SaveInfo", "File was successfully saved as: " +str(f_name) + "\nto the dsst folder.")
+    elif name == "Stop":
+        stop()
 
 
 
@@ -133,27 +147,9 @@ def answer_press(key):
         change_pic()
         new_task_table()
 
+
         if time.time() > start_time+duration:
-            win.enableButton("Start")
-            win.setImage("Znak", "pic/znak_blank.gif")
-            for i in range(0, 9):
-                im_name = "Znak" + str(i)
-                win.setImage(im_name, "pic/znak_blank.gif")
-            start_status = 0
-            win.setLabel("Meann", str(round((statistics.mean(times)), 3)) )
-
-            win.setLabel("Startinfo", "Press spacebar to START !")
-            win.bindKey("<space>", space_press)
-            win.updatePlot("plot", list(range(1, len(times) + 1)), times)
-            showLabels()
-
-            # log all merurements through sesion
-            file = open("log.txt", "a")
-            file.write("\nTime of test," + str(datetime.datetime.now().strftime("%H:%M %d %m %Y")))
-            file.write("\nTime (sec), Correct (T/F-1/0)")
-            for k in range(len(times)):
-                file.write("\n" + str(times[k]) + "," + str(result_list[k]))
-            file.close()
+            stop()
 
 
 def space_press(key):
@@ -168,8 +164,7 @@ try:
         sys.exit("Extended test duration time, in file opt_duration.txt change test duration from '1 to 3600' (sec)")
 
 except:
-    duration = 60
-
+    duration = 90
 
 # Add menu
 fileMenus = ["Control", "About", "-", "Exit"]
@@ -187,6 +182,7 @@ for i in range(9):
     im_name = "Znak"+str(i)
     im_path = "pic/znak_blank"
     win.addImage(im_name, im_path+".gif", 3, i)
+
 # Add image lables
 for j in range(1,10):
     lb_name = "Z"+str(j)
@@ -197,8 +193,6 @@ win.addLabel("Space3", "", 6, 0, 9)
 win.addImage("Znak", "pic/znak_blank.gif", 7, 0, 9)
 win.addLabel("Space4", "", 8, 0, 9)
 win.addLabel("Startinfo", "Press spacebar to START !", 9, 0, 9)
-#win.button("Start", press, 9, 0, 3)
-#win.button("Restart", press,9, 6, 3)
 
 # Bind key actions
 for k in range(1, 10):
@@ -228,9 +222,7 @@ win.addLabel("Times", "0", 7, 1)
 win.addLabel("Mean", "Mean time: ", 8, 0)
 win.addLabel("Meann", "0", 8, 1)
 win.button("Start", press, 9, 0 )
-win.button("Save", press, 9, 1)
-axes = win.addPlot("plot", 0,0, 0, 4, 10, 10)
-showLabels()
+win.button("Stop", press, 9, 1)
 win.stopSubWindow()
 
 
